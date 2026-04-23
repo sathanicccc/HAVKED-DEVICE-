@@ -3,117 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SATHAN V2 - SYSTEM BREACH</title>
+    <title>CRITICAL SYSTEM BREACH</title>
     <style>
-        body {
+        body, html {
             background-color: black;
-            color: #00FF41; /* Matrix Green */
+            color: #00FF41;
             font-family: 'Courier New', Courier, monospace;
-            overflow: hidden; /* Scroll thadaian */
+            overflow: hidden;
             height: 100vh;
+            width: 100%;
             margin: 0;
+            cursor: none;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
         }
 
         #terminal {
-            width: 80%;
-            height: 60vh;
+            width: 90%;
+            height: 80vh;
             border: 2px solid #00FF41;
-            padding: 20px;
-            background: rgba(0, 50, 0, 0.2);
-            overflow-y: hidden;
-            box-shadow: 0 0 20px #00FF41;
+            padding: 10px;
+            background: rgba(0, 20, 0, 0.4);
+            box-shadow: 0 0 30px #00FF41, inset 0 0 10px #00FF41;
+            position: relative;
+            animation: terminalGlow 2s ease-in-out infinite alternate;
         }
 
-        .glitch {
-            font-size: 2rem;
+        @keyframes terminalGlow {
+            from { box-shadow: 0 0 20px #00FF41, inset 0 0 5px #00FF41; }
+            to { box-shadow: 0 0 40px #00FF41, inset 0 0 20px #00FF41; }
+        }
+
+        .header {
+            font-size: 2.2rem;
             font-weight: bold;
+            text-align: center;
             text-transform: uppercase;
-            animation: glitch 1s infinite;
+            animation: glitch 0.5s infinite;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
         }
 
         @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+            0%, 100% { text-shadow: -2px 0 red, 2px 0 blue; transform: translateX(-50%) translate(0, 0); }
+            10% { text-shadow: -2px 0 red, 2px 0 blue; transform: translateX(-50%) translate(-2px, -2px); }
+            50% { text-shadow: -3px 0 yellow, 3px 0 blue; transform: translateX(-50%) translate(2px, 2px); }
         }
 
-        .warning {
-            color: red;
-            font-weight: bold;
-            margin-top: 10px;
+        #log-area {
+            position: absolute;
+            top: 100px;
+            bottom: 50px;
+            left: 20px;
+            right: 20px;
+            overflow-y: hidden;
+            font-size: 1rem;
+            opacity: 0.9;
         }
+
+        .command { color: #00FF41; }
+        .data { color: #57FF73; }
+        .warning-text { color: red; font-weight: bold; animation: pulse 0.8s infinite alternate; }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        #footer-status {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: red;
+            font-size: 1rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* Red Screen Flash Overlay */
+        #flash-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 0, 0, 0.4);
+            display: none;
+            z-index: 1000;
+        }
+
     </style>
 </head>
-<body onclick="startPrank()">
+<body id="main-body">
+
+    <div id="flash-overlay"></div>
+
+    <audio id="beep-sound" loop>
+        <source src="https://www.soundjay.com/buttons/beep-01a.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="terminal">
-        <div class="glitch">SATHAN V2 CONNECTED</div>
-        <p id="log-text">SYSTEM ACCESSING...</p>
+        <div class="header">SYSTEM BREACH DETECTED</div>
+        <div id="log-area">
+            <span class="command">> INITIATING SATHAN ROOTKIT V2.1...</span><br>
+            <span class="command">> ESTABLISHING CONNECTION...</span><br>
+        </div>
+        <div id="footer-status">CRITICAL ENCRYPTION FAILURE</div>
     </div>
 
-    <div class="warning" id="status">DO NOT CLOSE THIS TAB</div>
-
     <script>
-        // Back button thadaian (History manipulation)
+        // Sound and interaction init
+        const beepSound = document.getElementById('beep-sound');
+        const mainBody = document.getElementById('main-body');
+        const flashOverlay = document.getElementById('flash-overlay');
+        let soundStarted = false;
+
+        function startSequence() {
+            if (soundStarted) return;
+            soundStarted = true;
+            mainBody.onclick = null; // Prevent re-trigger
+            beepSound.play().catch(error => {
+                console.log("Audio play failed: ", error); // Handle browser blocking auto-play
+            });
+            nextLog();
+        }
+
+        mainBody.onclick = startSequence; // Start on first click
+        window.onload = startSequence; // Try to start automatically
+
+        // Back button blockade
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
             history.go(1);
-            alert("SATHAN IS WATCHING! BACK OPTION DISABLED.");
+            flashScreen(3);
+            setTimeout(() => {
+                alert("NAVIGATION IMPOSSIBLE. SYSTEM LOCKED.");
+            }, 100);
         };
 
         const logs = [
-            "Connecting to IMEI: 358210XXXXXXXXX...",
-            "Accessing Gallery...",
-            "Leaked Folder: Mallu_Private_Chats found.",
-            "Instagram DMs Exporting...",
-            "Contact List Cloned: 452 contacts uploaded.",
-            "Uploading 'Ammayum_Makkalum.mp4' to Sathan Cloud...",
-            "Location Tracked: Ernakulam Sector...",
-            "System Lock in progress...",
-            "TOTAL BREACH COMPLETED."
+            ["command", "> SCANNING DEVICE ID: "], ["data", "IMEI: 358210XXXXXXXXX..."],
+            ["command", "> ACCESSING GALLERY: "], ["data", "Image/Video index..."],
+            ["warning-text", "> FOUND DIRECTORY: /sdcard/Leaked/Mallu_Private_Chats/"],
+            ["data", "Scanning 452 files..."],
+            ["command", "> ACQUIRING CONTACTS: "], ["data", "Cloning 1287 contacts..."],
+            ["command", "> CHAT LOGS: "], ["data", "Syncing WhatsApp db..."],
+            ["command", "> CHAT LOGS: "], ["data", "Syncing Instagram DMs..."],
+            ["warning-text", "> FOUND VIDEO: 'Family_Ammayi.mp4'"],
+            ["command", "> BEGINNING UPLOAD TO SATHAN_SERVER..."],
+            ["data", "Progress: [==========] 100%"],
+            ["command", "> DELETING LOGS & LOCATING DEVICE..."],
+            ["warning-text", "> LOCATION FIXED: Ernakulam, Kerala (Sector 7B)"],
+            ["command", "> FINISHING BREACH..."],
+            ["warning-text", "> DEVICE LOCKDOWN INITIATED."]
         ];
 
         let i = 0;
-        function startPrank() {
-            const logBox = document.getElementById("log-text");
+        const logArea = document.getElementById("log-area");
+
+        function nextLog() {
             if (i < logs.length) {
-                logBox.innerHTML += "<br>> " + logs[i];
+                const type = logs[i][0];
+                const text = logs[i][1];
+                const newLog = document.createElement("span");
+                newLog.className = type;
+                newLog.textContent = text;
+                logArea.appendChild(newLog);
+                logArea.appendChild(document.createElement("br"));
+
+                if (i % 3 === 0) { // Random glitch/flash
+                    flashScreen(1);
+                    randomTerminalText();
+                }
+
                 i++;
-                setTimeout(startPrank, 1500);
+                let delay = Math.random() * 800 + 400; // Variable delay (realistic)
+                if (type === "warning-text") delay *= 1.5; // Longer delay on warnings
+                setTimeout(nextLog, delay);
             } else {
-                document.getElementById("status").innerHTML = "SYSTEM FROZEN FOR 180 SECONDS";
-                // Fake stuck logic
-                freezeUI();
+                finalizePrank();
             }
         }
 
+        function finalizePrank() {
+            document.getElementById("footer-status").style.display = "block";
+            beepSound.src = "https://www.soundjay.com/buttons/beep-07.mp3"; // Switch to continuous alarm
+            beepSound.loop = true;
+            beepSound.play();
+            freezeUI();
+            flashScreen(100); // Continuous flashing
+            setTimeout(() => {
+                alert("SYSTEM COMPROMISED. YOUR DATA IS SAFE (NOT). Hahaha.");
+            }, 3000);
+        }
+
+        // Screen flashing function
+        function flashScreen(count) {
+            let flashes = 0;
+            const interval = setInterval(() => {
+                flashOverlay.style.display = (flashOverlay.style.display === "none" || flashOverlay.style.display === "") ? "block" : "none";
+                flashes++;
+                if (flashes >= count * 2) {
+                    clearInterval(interval);
+                    flashOverlay.style.display = "none";
+                }
+            }, 100);
+        }
+
+        // Random glitch text insertion
+        function randomTerminalText() {
+            const extraLog = document.createElement("span");
+            extraLog.style.color = "orange";
+            extraLog.style.fontSize = "0.8rem";
+            extraLog.textContent = "[ERR] Glitch Detect: random_hex_0xFFA9...";
+            logArea.appendChild(extraLog);
+            logArea.appendChild(document.createElement("br"));
+        }
+
+        // Fake stuck logic (Overlay)
         function freezeUI() {
-            // Screen-il touch cheythalo back adichalo response illatha pole thonnikkan
             const overlay = document.createElement("div");
-            overlay.style.position = "fixed";
-            overlay.style.top = "0";
-            overlay.style.left = "0";
-            overlay.style.width = "100%";
-            overlay.style.height = "100%";
-            overlay.style.zIndex = "9999";
-            overlay.style.background = "transparent";
+            overlay.style.position = "fixed"; overlay.style.top = "0"; overlay.style.left = "0"; overlay.style.width = "100%"; overlay.style.height = "100%";
+            overlay.style.zIndex = "9999"; overlay.style.background = "transparent";
+            overlay.style.cursor = "wait"; // Change cursor to 'wait'
             document.body.appendChild(overlay);
         }
 
-        // Alert message for "panic"
-        window.onload = () => {
-            setTimeout(() => {
-                alert("WARNING: MALICIOUS ACTIVITY DETECTED. YOUR DATA IS BEING SYNCED TO SATHAN HUB.");
-            }, 2000);
-        };
-    </script>
+    </style>
+</head>
+<body id="main-body">
 </body>
 </html>

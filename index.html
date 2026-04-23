@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SATHAN V2 - SYSTEM BREACH</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00FF41; /* Matrix Green */
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden; /* Scroll thadaian */
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #terminal {
+            width: 80%;
+            height: 60vh;
+            border: 2px solid #00FF41;
+            padding: 20px;
+            background: rgba(0, 50, 0, 0.2);
+            overflow-y: hidden;
+            box-shadow: 0 0 20px #00FF41;
+        }
+
+        .glitch {
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: glitch 1s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .warning {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body onclick="startPrank()">
+
+    <div id="terminal">
+        <div class="glitch">SATHAN V2 CONNECTED</div>
+        <p id="log-text">SYSTEM ACCESSING...</p>
+    </div>
+
+    <div class="warning" id="status">DO NOT CLOSE THIS TAB</div>
+
+    <script>
+        // Back button thadaian (History manipulation)
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+            alert("SATHAN IS WATCHING! BACK OPTION DISABLED.");
+        };
+
+        const logs = [
+            "Connecting to IMEI: 358210XXXXXXXXX...",
+            "Accessing Gallery...",
+            "Leaked Folder: Mallu_Private_Chats found.",
+            "Instagram DMs Exporting...",
+            "Contact List Cloned: 452 contacts uploaded.",
+            "Uploading 'Ammayum_Makkalum.mp4' to Sathan Cloud...",
+            "Location Tracked: Ernakulam Sector...",
+            "System Lock in progress...",
+            "TOTAL BREACH COMPLETED."
+        ];
+
+        let i = 0;
+        function startPrank() {
+            const logBox = document.getElementById("log-text");
+            if (i < logs.length) {
+                logBox.innerHTML += "<br>> " + logs[i];
+                i++;
+                setTimeout(startPrank, 1500);
+            } else {
+                document.getElementById("status").innerHTML = "SYSTEM FROZEN FOR 180 SECONDS";
+                // Fake stuck logic
+                freezeUI();
+            }
+        }
+
+        function freezeUI() {
+            // Screen-il touch cheythalo back adichalo response illatha pole thonnikkan
+            const overlay = document.createElement("div");
+            overlay.style.position = "fixed";
+            overlay.style.top = "0";
+            overlay.style.left = "0";
+            overlay.style.width = "100%";
+            overlay.style.height = "100%";
+            overlay.style.zIndex = "9999";
+            overlay.style.background = "transparent";
+            document.body.appendChild(overlay);
+        }
+
+        // Alert message for "panic"
+        window.onload = () => {
+            setTimeout(() => {
+                alert("WARNING: MALICIOUS ACTIVITY DETECTED. YOUR DATA IS BEING SYNCED TO SATHAN HUB.");
+            }, 2000);
+        };
+    </script>
+</body>
+</html>
